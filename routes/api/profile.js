@@ -8,6 +8,9 @@ const User = require("../../models/User");
 // load Profile model
 const Profile = require("../../models/Profile");
 
+// load validation for profile inputs
+const validateProfileInput = require('../../validation/profile');
+
 // @route   GET api/profile
 // @desc    Get current users profile
 // @access  Private
@@ -18,6 +21,7 @@ router.get(
     let errors = {};
     // get logged in user info from jwt payload user id
     Profile.findOne({ user: req.user.id })
+      .populate('user', ['name', 'avatar']) // join user data into profile data
       .then(profile => {
         if (!profile) {
           errors.noProfile = "There is no profile for this user";
@@ -36,7 +40,13 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let errors = {};
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // return errors if validation errors
+    if(!isValid) {
+      return res.status(400).json(errors);
+    }
+
     // get fields
     let profileFields = {};
     profileFields.user = req.user.id; // user data from jwt payload
@@ -49,7 +59,7 @@ router.post(
     if (req.body.github) profileFields.github = req.body.github;
     // split skills string by ',' into array
     if (typeof req.body.skills !== "undefined")
-      profileFields.skills = req.body.skills.split(",");
+      profileFields.skills = req.body.skills.split(",").map(skill => skill.trim());
     // init empty object to inject social media strings
     profileFields.social = {};
     if (req.body.youtube) profileFields.social.youtube = req.body.youtube;
