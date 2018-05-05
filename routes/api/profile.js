@@ -11,14 +11,16 @@ const Profile = require("../../models/Profile");
 // load validation for profile inputs
 const validateProfileInput = require('../../validation/profile');
 
-// @route   GET api/profile
-// @desc    Get current users profile
-// @access  Private
+/*
+* @route   GET api/profile
+* @desc    Get current users profile
+* @access  Private
+*/
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let errors = {};
+    const errors = {};
     // get logged in user info from jwt payload user id
     Profile.findOne({ user: req.user.id })
       .populate('user', ['name', 'avatar']) // join user data into profile data
@@ -33,9 +35,69 @@ router.get(
   }
 );
 
-// @route   GET api/profile
-// @desc    Create or edit user profile
-// @access  Private
+/*
+* @route   GET api/profile/handle/:handle
+* @desc    Get profile by handle
+* @access  Public
+*/
+router.get('/handle/:handle', (req, res) => {
+  const errors = {};
+  Profile.findOne({ handle: req.params.handle })
+    .populate('user', ['name', 'avatar'])
+    .then(profile => {
+      if(!profile){
+        errors.noProfile =  "There is no profile for this user";
+        res.status(404).json(errors);
+      }
+      res.json(profile);
+    })
+    .catch(err => res.status(404).json(errors));
+});
+
+/*
+* @route   GET api/profile/user/:user_id
+* @desc    Get profile by handle
+* @access  Public
+*/
+router.get('/user/:user_id', (req, res) => {
+  const errors = {};
+  Profile.findOne({ user: req.params.user_id })
+    .populate('user', ['name', 'avatar'])
+    .then(profile => {
+      if(!profile){
+        errors.noProfile =  "There is no profile for this user";
+        res.status(404).json(errors);
+      }
+      res.json(profile);
+    })
+    .catch(err => res.status(404).json(errors));
+});
+
+/*
+* @route   GET api/profile/all
+* @desc    Get all profiles
+* @access  Public
+*/
+router.get('/all', (req, res) => {
+  const errors = {};
+  Profile.find({})
+    .populate('user', ['name', 'avatar'])
+    .then(profiles => {
+      if(!profiles){
+        errors.noProfiles =  "There are no profiles";
+        res.status(404).json(errors);
+      }
+      res.json(profiles);
+    })
+    .catch(err => res.status(404).json(errors));
+});
+
+
+/*
+* @route   GET api/profile
+* @desc    Create or edit user profile
+* @access  Private
+*/
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -48,7 +110,7 @@ router.post(
     }
 
     // get fields
-    let profileFields = {};
+    const profileFields = {};
     profileFields.user = req.user.id; // user data from jwt payload
     if (req.body.handle) profileFields.handle = req.body.handle;
     if (req.body.company) profileFields.company = req.body.company;
