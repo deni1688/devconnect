@@ -97,7 +97,7 @@ router.get("/all", (req, res) => {
 });
 
 /*
-* @route   GET api/profile
+* @route   POST api/profile
 * @desc    Create or edit user profile
 * @access  Private
 */
@@ -164,7 +164,7 @@ router.post(
 );
 
 /*
-* @route   GET api/profile/experience
+* @route   POST api/profile/experience
 * @desc    Add experience to profile
 * @access  Private
 */
@@ -178,27 +178,26 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    Profile.findOne({user: req.user.id})
-      .then(profile => {
-        const newExp = {
-          title: req.body.title,
-          company: req.body.company,
-          location: req.body.location,
-          from: req.body.from,
-          to: req.body.to,
-          current: req.body.current,
-          desc: req.body.desc
-        };
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const newExp = {
+        title: req.body.title,
+        company: req.body.company,
+        location: req.body.location,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        desc: req.body.desc
+      };
 
-        // Add to experience array in user profile
-        profile.experience.unshift(newExp);
-        profile.save().then(profile => res.json(profile));
-      });
+      // Add to experience array in user profile
+      profile.experience.unshift(newExp);
+      profile.save().then(profile => res.json(profile));
+    });
   }
 );
 
 /*
-* @route   GET api/profile/education
+* @route   POST api/profile/education
 * @desc    Add education to profile
 * @access  Private
 */
@@ -212,23 +211,80 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    Profile.findOne({user: req.user.id})
-      .then(profile => {
-        const newEdu = {
-          school: req.body.school,
-          fieldOfStudy: req.body.fieldOfStudy,
-          degree: req.body.degree,
-          from: req.body.from,
-          to: req.body.to,
-          current: req.body.current,
-          desc: req.body.desc
-        };
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const newEdu = {
+        school: req.body.school,
+        fieldOfStudy: req.body.fieldOfStudy,
+        degree: req.body.degree,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        desc: req.body.desc
+      };
 
-        // Add to education array in user profile
-        profile.education.unshift(newEdu);
-        profile.save().then(profile => res.json(profile));
-      });
+      // Add to education array in user profile
+      profile.education.unshift(newEdu);
+      profile.save().then(profile => res.json(profile));
+    });
   }
 );
+
+/*
+* @route   DELETE api/profile/experience
+* @desc    Delete experience from  profile
+* @access  Private
+*/
+router.delete(
+  "/experience/:exp_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        // Delete experience in user profile
+        profile.experience = profile.experience.filter(
+          exp => exp.id !== req.params.exp_id
+        );
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
+/*
+* @route   DELETE api/profile/education
+* @desc    Delete education from  profile
+* @access  Private
+*/
+router.delete(
+  "/education/:edu_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        // Delete education in user profile
+        profile.education = profile.education.filter(
+          edu => edu.id !== req.params.edu_id
+        );
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
+/*
+* @route   DELETE api/profile
+* @desc    Delete user and profile
+* @access  Private
+*/
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+   Profile.findOneAndRemove({ user: req.user.id })
+    .then(() => {
+      User.findOneAndRemove({ _id: req.user.id })
+       .then(() => res.json({ success: true }));
+    });
+  });
 
 module.exports = router;
