@@ -61,7 +61,7 @@ router.post("/register", (req, res) => {
 });
 
 /*
- * @route   GET api/users/login
+ * @route   POST api/users/login
  * @desc    Login user and return jwt token
  * @access  Public
  */
