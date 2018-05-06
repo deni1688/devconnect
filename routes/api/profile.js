@@ -241,9 +241,12 @@ router.delete(
     Profile.findOne({ user: req.user.id })
       .then(profile => {
         // Delete experience in user profile
-        profile.experience = profile.experience.filter(
-          exp => exp.id !== req.params.exp_id
-        );
+        const removeIndex = profile.experience
+          .map(item => item.id)
+          .indexOf(req.params.exp_id);
+        // remove from experience
+        profile.experience.splice(removeIndex, 1);
+        
         profile.save().then(profile => res.json(profile));
       })
       .catch(err => res.status(404).json(err));
@@ -262,9 +265,11 @@ router.delete(
     Profile.findOne({ user: req.user.id })
       .then(profile => {
         // Delete education in user profile
-        profile.education = profile.education.filter(
-          edu => edu.id !== req.params.edu_id
-        );
+        const removeIndex = profile.education
+          .map(item => item.id)
+          .indexOf(req.params.exp_id);
+        // remove from education
+        profile.education.splice(removeIndex, 1);
         profile.save().then(profile => res.json(profile));
       })
       .catch(err => res.status(404).json(err));
@@ -280,11 +285,12 @@ router.delete(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-   Profile.findOneAndRemove({ user: req.user.id })
-    .then(() => {
-      User.findOneAndRemove({ _id: req.user.id })
-       .then(() => res.json({ success: true }));
+    Profile.findOneAndRemove({ user: req.user.id }).then(() => {
+      User.findOneAndRemove({ _id: req.user.id }).then(() =>
+        res.json({ success: true })
+      );
     });
-  });
+  }
+);
 
 module.exports = router;
