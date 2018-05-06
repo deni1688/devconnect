@@ -25,13 +25,14 @@ module.exports = validateRegisterInput = data => {
     errors.email = "Email is required";
   }
 
+  if (!Validator.isLength(data.password, { min: 6 })) {
+    errors.password = "Password must be 6 or more characters";
+  }
+
   if (Validator.isEmpty(data.password)) {
     errors.password = "Password field is required";
   }
 
-  if (!Validator.isLength(data.password, { min: 6 })) {
-    errors.password = "Password must be 6 or more characters";
-  }
 
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Confirm password field is required";
