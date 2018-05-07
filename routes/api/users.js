@@ -21,11 +21,12 @@ const validateLoginInput = require("../../validation/login");
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
-  if(!isValid){
+  if (!isValid) {
     return res.status(400).json(errors);
   }
 
   // verify that user is not already registerd
+  // NOTE - This will not run if other errors are present in the req.body
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
       errors.email = "Email already registered";
@@ -68,7 +69,7 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
 
-  if(!isValid){
+  if (!isValid) {
     return res.status(400).json(errors);
   }
 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -8,6 +9,7 @@ class Navbar extends Component {
   handleLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
+    this.props.history.push("/login");
   };
   render() {
     const { isAuthenticated, user } = this.props.auth;
@@ -87,4 +89,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default connect(mapStateToProps, { logoutUser })(withRouter(Navbar));

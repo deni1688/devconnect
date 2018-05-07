@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import authReducer from "./authReducer" ;
-import errorsReducer from "./errorsReducer" ;
+import authReducer from "./authReducer";
+import errorsReducer from "./errorsReducer";
+import profileReducer from "./profileReducer";
 
 /**
  * This is a root reducer that combines
@@ -9,5 +10,6 @@ import errorsReducer from "./errorsReducer" ;
  */
 export default combineReducers({
   auth: authReducer,
-  errors: errorsReducer
+  errors: errorsReducer,
+  profile: profileReducer
 });
