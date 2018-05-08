@@ -29,6 +29,11 @@ class Navbar extends Component {
           />
           Hi {user.name}
         </li>
+        <li className="nav-item d-flex align-items-center">
+          <Link to="/dashboard" className="nav-link">
+            Dashboard
+          </Link>
+        </li>
         <li className="nav-item">
           <a className="nav-link" href="" onClick={this.handleLogoutClick}>
             Logout

@@ -4,6 +4,7 @@ import {
   CLEAR_CURRENT_PROFILE,
   GET_ERRORS
 } from "../actions/types";
+import { logoutUser } from "./authActions";
 import axios from "axios";
 
 export const getCurrentProfile = () => dispatch => {
@@ -34,6 +35,22 @@ export const createProfile = (profileData, history) => dispatch => {
         payload: err.response.data
       });
     });
+};
+
+export const deleteAccount = () => dispatch => {
+  if (prompt("Enter DELETE to confirm. ") === "DELETE") {
+    axios
+      .delete("/api/profile")
+      .then(res => {
+        dispatch(logoutUser());
+      })
+      .catch(err => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        });
+      });
+  }
 };
 
 export const setProfileLoading = () => {

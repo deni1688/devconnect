@@ -246,7 +246,7 @@ router.delete(
           .indexOf(req.params.exp_id);
         // remove from experience
         profile.experience.splice(removeIndex, 1);
-        
+
         profile.save().then(profile => res.json(profile));
       })
       .catch(err => res.status(404).json(err));

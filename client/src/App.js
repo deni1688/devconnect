@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { clearProfile } from "./actions/profileActions";
@@ -17,6 +22,7 @@ import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard/Dashboard";
 import PrivateRoute from "./components/common/PrivateRoute";
 import CreateProfile from "./components/createProfile/CreateProfile";
+import EditProfile from "./components/editProfile/EditProfile";
 import PageNotFound from "./components/layout/PageNotFound";
 
 // check for token
@@ -49,7 +55,9 @@ class App extends Component {
               <Route path="/register" component={Register} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <PrivateRoute path="/create-profile" component={CreateProfile} />
-              <Route path="**" component={PageNotFound} />
+              <PrivateRoute path="/edit-profile" component={EditProfile} />
+              <Route path="/404" component={PageNotFound} />
+              <Redirect to="/404" />
             </Switch>
             <Footer />
           </div>
