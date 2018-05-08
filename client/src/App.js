@@ -16,6 +16,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard/Dashboard";
 import PrivateRoute from "./components/common/PrivateRoute";
+import CreateProfile from "./components/createProfile/CreateProfile";
 import PageNotFound from "./components/layout/PageNotFound";
 
 // check for token
@@ -44,9 +45,10 @@ class App extends Component {
             <Navbar />
             <Switch>
               <Route exact path="/" component={Landing} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
-              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+              <PrivateRoute path="/dashboard" component={Dashboard} />
+              <PrivateRoute path="/create-profile" component={CreateProfile} />
               <Route path="**" component={PageNotFound} />
             </Switch>
             <Footer />

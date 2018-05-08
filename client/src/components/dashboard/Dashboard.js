@@ -11,7 +11,7 @@ class Dashboard extends Component {
   }
   render() {
     const { user } = this.props.auth;
-    const { profile, loading } = this.props.profile;
+    const { profile } = this.props.profile;
     let dashboardContent;
     if (profile === null) {
       dashboardContent = <Spinner />;
@@ -23,7 +23,7 @@ class Dashboard extends Component {
           <div>
             <h4 className="text-muted">Hello {user.name}</h4>
             <p>You have not made a profile yet. </p>
-            <Link to="/create-profile" className="btn btn-info">
+            <Link to="/create-profile" className="btn btn-info btn-sm">
               Create Profile
             </Link>
           </div>
