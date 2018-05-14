@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import { addPost } from "actions/postActions";
 
-export default class PostForm extends Component {
+class PostForm extends Component {
 	state = {
 		text: "",
 		errors: {}
@@ -14,12 +14,23 @@ export default class PostForm extends Component {
 	};
 	handleSubmit = e => {
 		e.preventDefault();
-		const user = {
-			email: this.state.email,
-			password: this.state.password
+		const { user } = this.props.auth;
+		const newPost = {
+			text: this.state.text,
+			name: user.name,
+			avatar: user.avatar
 		};
-		this.props.loginUser(user);
+		this.props.addPost(newPost);
+		this.setState({
+			text: "",
+			errors: {}
+		});
 	};
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.errors) {
+			this.setState({ errors: nextProps.errors });
+		}
+	}
 	render() {
 		const { errors, text } = this.state;
 		return (
@@ -47,3 +58,13 @@ export default class PostForm extends Component {
 		);
 	}
 }
+PostForm.propTypes = {
+	addPost: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired
+};
+const mapStateToProps = state => ({
+	errors: state.errors,
+	auth: state.auth
+});
+export default connect(mapStateToProps, { addPost })(PostForm);

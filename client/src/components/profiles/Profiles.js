@@ -28,8 +28,8 @@ class Profiles extends Component {
 				<div className="container">
 					<div className="row">
 						<div className="col-12">
-							<h1>Devconnect Profiles</h1>
-							<p>Browse and connect with our community</p>
+							<h1>Devconnect Community</h1>
+							<p>Browse and connect with us</p>
 							{profileItems}
 						</div>
 					</div>

@@ -7,7 +7,7 @@ const Spinner = () => {
 			className="d-flex align-items-center"
 		>
 			Loading{" "}
-			<img src="img/loader.svg" alt="Loader" style={{ width: "25px" }} />
+			<img src="/img/loader.svg" alt="Loader" style={{ width: "25px" }} />
 		</span>
 	);
 };

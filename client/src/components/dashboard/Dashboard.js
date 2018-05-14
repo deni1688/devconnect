@@ -31,12 +31,12 @@ class Dashboard extends Component {
 
 						<hr />
 						<ProfileActions />
-						{profile.experience.length !== null ? (
+						{profile.experience.length ? (
 							<Experience experience={profile.experience} />
 						) : (
 							""
 						)}
-						{profile.education.length !== null ? (
+						{profile.education.length ? (
 							<Education education={profile.education} />
 						) : (
 							""

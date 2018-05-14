@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { deleteEducation } from "actions/profileActions";
 import moment from "moment";
@@ -15,7 +14,7 @@ class Education extends Component {
 				<td>{edu.fieldOfStudy}</td>
 				<td>
 					{moment(edu.from).format("YYYY/MM/DD")} -{" "}
-					{edu.from ? "current" : moment(edu.to).format("YYYY/MM/DD")}
+					{edu.to === null ? "current" : moment(edu.to).format("YYYY/MM/DD")}
 				</td>
 				<td className="text-right">
 					<button

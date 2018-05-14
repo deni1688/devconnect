@@ -105,8 +105,6 @@ router.post(
 	"/",
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
-		console.log(req.body);
-
 		const { errors, isValid } = validateProfileInput(req.body);
 
 		// return errors if validation errors
@@ -133,13 +131,10 @@ router.post(
 		// init empty object to inject social media strings
 		profileFields.social = {};
 		if (req.body.youtube) profileFields.social.youtube = req.body.youtube;
-		if (req.body.facebook)
-			profileFields.social.facebook = req.body.facebook;
-		if (req.body.linkedin)
-			profileFields.social.linkedin = req.body.linkedin;
+		if (req.body.facebook) profileFields.social.facebook = req.body.facebook;
+		if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
 		if (req.body.twitter) profileFields.social.twitter = req.body.twitter;
-		if (req.body.instagram)
-			profileFields.social.instagram = req.body.instagram;
+		if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
 		Profile.findOne({ user: req.user.id }).then(profile => {
 			if (profile) {
@@ -151,21 +146,19 @@ router.post(
 				).then(profile => res.json(profile));
 			} else {
 				// Create profile
-				Profile.findOne({ handle: profileFields.handle }).then(
-					profile => {
-						// Check if handle exists
-						if (profile) {
-							errors.handle = "That handle already exists";
-							res.status(400).json(errors);
-						}
-
-						// Save profile
-						new Profile(profileFields)
-							.save()
-							.then(profile => res.json(profile))
-							.catch(err => console.log(err));
+				Profile.findOne({ handle: profileFields.handle }).then(profile => {
+					// Check if handle exists
+					if (profile) {
+						errors.handle = "That handle already exists";
+						res.status(400).json(errors);
 					}
-				);
+
+					// Save profile
+					new Profile(profileFields)
+						.save()
+						.then(profile => res.json(profile))
+						.catch(err => console.log(err));
+				});
 			}
 		});
 	}

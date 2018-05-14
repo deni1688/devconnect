@@ -5,7 +5,7 @@ class ProfileItem extends Component {
 	render() {
 		const { profile } = this.props;
 		const skills = profile.skills.map((skill, i) => (
-			<span className="badge badge-info" key={i}>
+			<span className="badge badge-dark" key={i}>
 				{skill}
 			</span>
 		));
